@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://sam1234:sam@1234@devcluster-kvucv.mongodb.net/test?retryWrites=true&w=majority",
+  "jsonSecret": "secrettoken"
+}
