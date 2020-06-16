@@ -5,6 +5,7 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const normalize = require('normalize-url');
 const User = require('../../models/User');
 
 
@@ -33,11 +34,20 @@ router.post('/',[
       }] });
     }
 
-    const avatar = gravatar.url(email, {
-      s: '200',
-      r: 'pg',
-      d: 'mm'
-    });
+    // const avatar = gravatar.url(email, {
+    //   s: '200',
+    //   r: 'pg',
+    //   d: 'mm'
+    // });
+
+    const avatar = normalize(
+      gravatar.url(email, {
+        s: '200',
+        r: 'pg',
+        d: 'mm'
+      }),
+      { forceHttps: true }
+    );
 
     user = new User({
       name,
