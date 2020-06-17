@@ -1,6 +1,5 @@
 const express = require('express');
 const config = require('config');
-const request = require('request');
 const router = express.Router();
 const { check, validationResult, body } = require('express-validator');
 const axios = require('axios');
@@ -40,11 +39,7 @@ router.post('/', [
 ], async (req, res) => {
   const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array()
-    });
-  }
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   const {company, website, status, skills, bio, location, githubusername, youtube, facebook, twitter, instagram, linkedin} = req.body;
 
@@ -112,13 +107,15 @@ router.get('/', async (req, res) => {
 
 
 // @route GET api/profile/user/:user_id
-// @desc Get users Profile by id
+// @desc Get users Profile by ID
 // @access Public
 router.get('/user/:user_id', checkObjectId('user_id'), async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar']);
 
-    if (!profile) return res.status(404).json({ msg: 'Profile not found'});
+    if (!profile) return res.status(404).json({ msg: 'Profile Not Found'});
+
+    // @todo implement views and send mail
 
     return res.status(200).json(profile);
 
@@ -130,7 +127,7 @@ router.get('/user/:user_id', checkObjectId('user_id'), async (req, res) => {
 
 
 // @route DELETE api/profile
-// @desc Delete user profile and post
+// @desc Delete user account permanently
 // @access Private
 router.delete('/', auth, async (req, res) => {
   try {
@@ -142,6 +139,32 @@ router.delete('/', auth, async (req, res) => {
     await Profile.findOneAndRemove({ user: req.user.id });
 
     return res.status(200).json({ msg: 'User deleted' });
+
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send(err.message);
+  }
+});
+
+
+// @route DELETE api/profile/deactivate
+// @desc Deactivate user account
+// @access Private
+router.delete('/deactivate', auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user.id);
+
+    const userObj = { active: false };
+
+    user = await User.findOneAndUpdate(
+      { user: req.user.id },
+      { $set: userObj },
+      { new: true }
+    );
+
+    await user.save();
+
+    return res.status(200).json({ msg: 'User account deactivated' });
 
   } catch (err) {
     console.log(err.message);
@@ -181,7 +204,7 @@ router.put('/experience', [ auth, [
 
     await profile.save();
 
-    return res.status(200).json(profile)
+    return res.status(200).json(profile);
     
   } catch (err) {
     console.log(err.message);
@@ -201,7 +224,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     //   (exp) => exp._id.toString() !== req.params.exp_id
     // );
 
-    const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
+    const removeIndex = profile.experience.map(exp => exp.id.toString()).indexOf(req.params.exp_id);
 
     profile.experience.splice(removeIndex, 1);
 
@@ -269,7 +292,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     //   (edu) => edu._id.toString() !== req.params.edu_id
     // );
 
-    const removeIndex = profile.education.map(item => item.id).indexOf(req.params.edu_id);
+    const removeIndex = profile.education.map(edu => edu.id.toString()).indexOf(req.params.edu_id);
 
     profile.education.splice(removeIndex, 1);
 
@@ -289,39 +312,23 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 // @access Public
 router.get('/github/:username', async (req, res) => {
   try {
-    // const options = {
-    //   uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${config.get('clientID')}&client_secret=${config.get('clientSecret')}`,
-    //   method: 'GET',
-    //   headers: {
-    //     'user-agent': 'node.js'
-    //   }
-    // };
-
-    // request(options, (error, response, body) => {
-    //   if (error) console.error(error);
-
-    //   if (response.statusCode !== 200) return res.status(404).json({ msg: 'Github Profile Not Found' });
-
-    //   return res.status(200).json(JSON.parse(body));
-    // });
-
-
     const uri = encodeURI(
       `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
     );
+
     const headers = {
       'user-agent': 'node.js',
       Authorization: `token ${config.get('githubToken')}`
     };
     
-    const gitHubResponse = await axios.get(uri, { headers });
+    const response = await axios.get(uri, { headers });
 
-    return res.status(200).json(gitHubResponse.data);
+    return res.status(200).json(response.data);
 
   } catch (err) {
     console.error(err.messsage);
     return res.status(500).send(err.message);
   }
-})
+});
 
 module.exports = router;

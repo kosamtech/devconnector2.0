@@ -33,28 +33,20 @@ router.post('/', [
 ], async (req, res) => {
   const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   const {email, password } = req.body;
 
   try {
     const user =  await User.findOne({ email });
 
-    if (!user) {
-      return res.status(400).json({ errors: [{ 
-        msg: 'Invalid Credentials' 
-      }] });
-    }
+    if (!user) return res.status(400).json({ errors:  [{  msg: 'Invalid Credentials' }] });
+
+    if (!user.active) return res.status(400).json({ errors: [{ msg: 'Your account is deactivated. Please consult the site admin to activate' }] });
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) {
-      return res.status(400).json({ errors: [{ 
-        msg: 'Invalid Credentials' 
-      }] });
-    }
+    if (!isMatch) return res.status(400).json({ errors: [{  msg: 'Invalid Credentials'  }] });
 
     const payload = {
       user: {
