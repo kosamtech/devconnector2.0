@@ -148,7 +148,14 @@ router.put('/unlike/:id', [auth, checkObjectId('id')], async (req, res) => {
 // @route POST api/posts/comment/:id
 // @desc comment on a post
 // @access Private
-router.post('/comment/:id', [auth, checkObjectId('id')], async (req, res) => {
+router.post('/comment/:id', [auth, [
+  checkObjectId('id'),
+  check('text', 'Text is required').not().isEmpty()
+]], async (req, res) => {
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   try {
     const post = await Post.findById(req.params.id);
     const user = await User.findById(req.user.id).select('-password');
@@ -202,6 +209,6 @@ router.delete('/comment/:id/:comment_id', [auth, checkObjectId('id')], async (re
     console.log(err.message);
     return res.status(500).send(err.message);
   }
-})
+});
 
 module.exports = router;
