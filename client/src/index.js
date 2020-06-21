@@ -1,26 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
 import App from './App';
-import rootReducer from './reducers';
+import store from './store';
 import * as serviceWorker from './serviceWorker';
 
-const initialState = {};
-
-const middleware = [thunk];
-
-const store = createStore( 
-  rootReducer, 
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
+const options = {
+  timeout: 5000,
+  position: 'top center'
+}
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AlertProvider template={AlertTemplate} {...options}>
+      <App />
+    </AlertProvider>
   </Provider>,
   document.getElementById('root')
 );
