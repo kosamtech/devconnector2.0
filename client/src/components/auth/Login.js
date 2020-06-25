@@ -27,36 +27,34 @@ const  Login = ({ signin, loading, isAuthenticated }) => {
   }
   
   return (
-    <section className="container">
-      <div className="form-container my-3">
-        <h1 className="large text-primary">Sign In</h1>
-        <p className="lead"><i className="fas fa-user"></i> Sign Into Your Account</p>
-        <form onSubmit={e => handleSubmit(e)} className="form">
-          <div className="form-group">
-            <input
-            type="email" 
-            placeholder="someone@example.com" 
-            name="email"
-            value={email}
-            onChange={e => handleChange(e)} 
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={e => handleChange(e)}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">{ loading ? <Loader type="Oval" color="#424242" height={25} width={25} />: "Login" }</button> <span className="pull-right"><Link to="/forgotpassword">Forgot Password?</Link></span>
-        </form>
-        <p className="my-1">
-          Don't have an account? <Link to="/register">Sign Up</Link>
-        </p>
-      </div>
-    </section>
+    <div className="form-container my-3">
+      <h1 className="large text-primary">Sign In</h1>
+      <p className="lead"><i className="fas fa-user"></i> Sign Into Your Account</p>
+      <form onSubmit={e => handleSubmit(e)} className="form">
+        <div className="form-group">
+          <input
+          type="email" 
+          placeholder="someone@example.com" 
+          name="email"
+          value={email}
+          onChange={e => handleChange(e)} 
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={password}
+            onChange={e => handleChange(e)}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">{ loading ? <Loader type="Oval" color="#424242" height={25} width={25} />: "Login" }</button> <span className="pull-right"><Link to="/forgotpassword">Forgot Password?</Link></span>
+      </form>
+      <p className="my-1">
+        Don't have an account? <Link to="/register">Sign Up</Link>
+      </p>
+    </div>
   );
 }
 

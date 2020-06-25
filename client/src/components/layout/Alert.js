@@ -10,6 +10,13 @@ class Alert extends React.Component {
 
     if (message !== prevProps.message) {
       if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+      if (message.profileCreated) alert.success(message.profileCreated);
+      if (message.profileUpdated) alert.success(message.profileUpdated);
+      if (message.addExp) alert.success(message.addExp);
+      if (message.addEdu) alert.success(message.addEdu);
+      if (message.deleteExp) alert.error(message.deleteExp);
+      if (message.deleteEdu) alert.error(message.deleteEdu);
+      if (message.NoProfile) alert.error(message.NoProfile);
     }
 
     if (errors !== prevProps.errors) {

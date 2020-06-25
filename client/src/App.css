@@ -48,6 +48,26 @@ img {
   float: right;
 }
 
+.danger-zone {
+  margin-top: 1rem;
+  padding: 3rem;
+  display: flex;
+  justify-content: space-between;
+  border: #dc3545 1px dotted;
+}
+
+.danger-para {
+  color: #dc3545;
+  margin-top: 5rem;
+}
+
+.mx-center {
+  padding: 6rem 4rem;
+  margin: auto;
+  display: block;
+  width: 200px;
+}
+
 /* Text Styles*/
 .x-large {
   font-size: 4rem;

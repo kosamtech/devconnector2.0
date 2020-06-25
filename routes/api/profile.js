@@ -7,6 +7,7 @@ const auth = require('../../middleware/auth');
 const checkObjectId = require('../../middleware/checkObjectId');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const Post = require('../../models/Post');
 
 
 // @route GET api/profile/me
@@ -131,14 +132,15 @@ router.get('/user/:user_id', checkObjectId('user_id'), async (req, res) => {
 // @access Private
 router.delete('/', auth, async (req, res) => {
   try {
-    // @todo delete post
+    // user posts
+    await Post.deleteMany({ user: req.user.id });
 
     // delete user
     await User.findOneAndRemove({ _id: req.user.id });
     // delete profile
     await Profile.findOneAndRemove({ user: req.user.id });
 
-    return res.status(200).json({ msg: 'User deleted' });
+    return res.status(200).json({ msg: 'User account permanently deleted' });
 
   } catch (err) {
     console.log(err.message);
@@ -157,7 +159,7 @@ router.delete('/deactivate', auth, async (req, res) => {
     const userObj = { active: false };
 
     user = await User.findOneAndUpdate(
-      { user: req.user.id },
+      { _id: req.user.id },
       { $set: userObj },
       { new: true }
     );
