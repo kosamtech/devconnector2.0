@@ -14,9 +14,13 @@ class Alert extends React.Component {
       if (message.profileUpdated) alert.success(message.profileUpdated);
       if (message.addExp) alert.success(message.addExp);
       if (message.addEdu) alert.success(message.addEdu);
-      if (message.deleteExp) alert.error(message.deleteExp);
-      if (message.deleteEdu) alert.error(message.deleteEdu);
+      if (message.deleteExp) alert.success(message.deleteExp);
+      if (message.deleteEdu) alert.success(message.deleteEdu);
       if (message.NoProfile) alert.error(message.NoProfile);
+      if (message.postDeleted) alert.success(message.postDeleted);
+      if (message.postAdded) alert.success(message.postAdded);
+      if (message.commentAdded) alert.success(message.commentAdded);
+      if (message.commentDeleted) alert.success(message.commentDeleted);
     }
 
     if (errors !== prevProps.errors) {

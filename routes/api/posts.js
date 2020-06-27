@@ -103,7 +103,7 @@ router.put('/like/:id', [auth, checkObjectId('id')], async (req, res) => {
 
     if (!post) return res.status(404).json({ msg: 'Post not found' });
 
-    if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) return res.status(400).json({ msg: 'Post already liked' });
+    if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) return res.status(400).json({ msg: "You've already liked the post" });
 
     post.likes.unshift({ user: req.user.id });
 
@@ -128,7 +128,7 @@ router.put('/unlike/:id', [auth, checkObjectId('id')], async (req, res) => {
 
     if (!post) return res.status(404).json({ msg: 'Post not found' });
 
-    if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) return res.status(400).json({ msg: 'Post has not been liked' });
+    if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) return res.status(400).json({ msg: "You've not liked the post" });
 
     const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
 
