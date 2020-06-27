@@ -3,6 +3,7 @@ const config = require('config');
 const router = express.Router();
 const { check, validationResult, body } = require('express-validator');
 const axios = require('axios');
+const normalize = require('normalize-url')
 const auth = require('../../middleware/auth');
 const checkObjectId = require('../../middleware/checkObjectId');
 const Profile = require('../../models/Profile');
@@ -48,7 +49,7 @@ router.post('/', [
   const profileFields = {};
   profileFields.user = req.user.id;
   if (company) profileFields.company = company;
-  if (website) profileFields.website = website;
+  if (website) profileFields.website = normalize(website, { forceHttps: true });
   if (status) profileFields.status = status;
   if (bio) profileFields.bio = bio;
   if (location) profileFields.location = location;
@@ -58,12 +59,15 @@ router.post('/', [
   }
 
   // Build social object
-  profileFields.social = {};
-  if (youtube) profileFields.social.youtube = youtube;
-  if (twitter) profileFields.social.twitter = twitter;
-  if (facebook) profileFields.social.facebook = facebook;
-  if (instagram) profileFields.social.instagram = instagram;
-  if (linkedin) profileFields.social.linkedin = linkedin;
+  const socialFields = {youtube, facebook, twitter, linkedin, instagram}
+
+  for (const [key, value] of Object.entries(socialFields)) {
+    if (value.length > 0) {
+      socialFields[key] = normalize(value, { forceHttps: true });
+    }
+  }
+
+  profileFields.social = socialFields;
 
 
   try {

@@ -16,7 +16,7 @@ export const loadUser = () => async dispatch => {
   try {
     dispatch({ type: actionTypes.AUTH_START });
 
-    const res = await axios.get('http://localhost:5000/api/auth');
+    const res = await axios.get('/api/auth');
 
     dispatch({
       type: actionTypes.USER_LOADED,
@@ -24,7 +24,7 @@ export const loadUser = () => async dispatch => {
     });
 
   } catch (err) {
-    dispatch(returnErrors(err.response.data.errors[0], err.response.status));
+    dispatch(returnErrors(err.response.data, err.response.status));
     dispatch({
       type: actionTypes.AUTH_ERROR
     });
@@ -45,7 +45,7 @@ export const signup = ({ name, email, password }) => async dispatch =>  {
       type: actionTypes.AUTH_START
     });
 
-    const res = await axios.post('http://localhost:5000/api/users', data, config);
+    const res = await axios.post('/api/users', data, config);
 
     dispatch({
       type: actionTypes.SIGNUP_SUCCESS,
@@ -75,7 +75,7 @@ export const signin = ({ email, password }) => async dispatch => {
   try {
     dispatch({ type: actionTypes.AUTH_START });
 
-    const res = await axios.post('http://localhost:5000/api/auth', data, config);
+    const res = await axios.post('/api/auth', data, config);
 
     dispatch({
       type: actionTypes.LOGIN_SUCCESS,

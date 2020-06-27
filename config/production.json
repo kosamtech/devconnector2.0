@@ -1,0 +1,7 @@
+{
+  "mongoURI": "mongodb+srv://sam1234:sam@1234@devcluster-kvucv.mongodb.net/test?retryWrites=true&w=majority",
+  "jsonSecret": "secrettoken",
+  "clientID": "dd3fe1b73b4bc5853a7e",
+  "clientSecret": "b5f5564cd879888f8659e89abdb1529b910ad848",
+  "githubToken": "4d34377da609899b9ae781fd3dc28d9091c90088"
+}
